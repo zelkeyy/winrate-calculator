@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>winrate calculator</title>
+  <style>
+    body {
+      background: url('bg1.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(1.5px);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(28, 46, 74, 0.65); /* transparan biru */
+  backdrop-filter: blur(10px); /* efek blur */
+  -webkit-backdrop-filter: blur(10px); /* buat dukungan di Safari */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+    button:hover {
+  background: rgba(28, 46, 74, 0.9);
+}
+
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.38); /* semi transparan */
+    color: white;
+    font-size: 16px;
+    backdrop-filter: blur(3px); /* dikit blur biar nyatu sama container */
+    -webkit-backdrop-filter: blur(3px);
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    }
+
+  input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  }
+
+  input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid white;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Winrate Calculator</h1>
+
+    <label for="matches">Total Match Lu Sekarang</label>
+    <input type="number" id="matches" placeholder="Misal: 288" />
+
+    <label for="winrate">Winrate Lu Sekarang (%)</label>
+    <input type="number" step="0.01" id="winrate" placeholder="Misal: 55.88" />
+
+    <label for="target">Lu Pengen Winrate Berapa? (%)</label>
+    <input type="number" step="0.01" id="target" placeholder="Misal: 58" />
+
+    <button onclick="hitung()">Hitung Butuh Berapa Winstreak</button>
+    <div class="result" id="hasil"></div>
+
+    <div class="section-title">Simulasi Kalo Lu Engga Winstreak</div>
+    
+    <label for="extraWin">Lu Win Berapa Kali?</label>
+    <input type="number" id="extraWin" placeholder="Misal: 7" />
+
+    <label for="extraLose">Lu Lose Berapa Kali?</label>
+    <input type="number" id="extraLose" placeholder="Misal: 3" />
+
+    <button onclick="simulasi()">Hitung Winrate Baru Lu</button>
+    <div class="result" id="simulasiHasil"></div>
+  </div>
+
+  <script>
+    function hitung() {
+      const totalMatch = parseFloat(document.getElementById('matches').value);
+      const currentWR = parseFloat(document.getElementById('winrate').value) / 100;
+      const targetWR = parseFloat(document.getElementById('target').value) / 100;
+
+      if (isNaN(totalMatch) || isNaN(currentWR) || isNaN(targetWR)) {
+        document.getElementById('hasil').textContent = 'ISI FORM YANG BENER NJIRR';
+        return;
+      }
+
+      const currentWin = totalMatch * currentWR;
+      const x = (targetWR * totalMatch - currentWin) / (1 - targetWR);
+
+      const hasilText = x > 0
+        ? `LU BUTUH WS ${Math.ceil(x)}x BIAR WINRATE LU JADI ${targetWR * 100}%`
+        : `MANTAP CUYY, WR LU DAH LEBIH GACOR DARI TARGET`;
+
+      document.getElementById('hasil').textContent = hasilText;
+    }
+
+    function simulasi() {
+      const totalMatch = parseFloat(document.getElementById('matches').value);
+      const currentWR = parseFloat(document.getElementById('winrate').value) / 100;
+      const extraWin = parseInt(document.getElementById('extraWin').value);
+      const extraLose = parseInt(document.getElementById('extraLose').value);
+
+      if (isNaN(totalMatch) || isNaN(currentWR) || isNaN(extraWin) || isNaN(extraLose)) {
+        document.getElementById('simulasiHasil').textContent = 'ISI FORM YANG BENER BJIRR';
+        return;
+      }
+
+      const currentWin = totalMatch * currentWR;
+      const newTotal = totalMatch + extraWin + extraLose;
+      const newWin = currentWin + extraWin;
+      const newWR = (newWin / newTotal) * 100;
+
+      document.getElementById('simulasiHasil').textContent = `BERARTI NANTI WR LU JADI ${newWR.toFixed(2)}% CUYY`;
+    }
+  </script>
+</body>
+</html>
